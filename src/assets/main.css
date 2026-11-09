@@ -1,0 +1,128 @@
+/* Pink Door — global styles.
+   Palette, fonts and background are ported 1:1 from the original
+   single-file login page (deng-lu-ye-mian.html). */
+* { box-sizing: border-box; }
+
+:root {
+  color-scheme: light dark;
+  --bg: #fff0f4;
+  --bg-soft: #ffe3ec;
+  --card: #fffafd;
+  --card-border: #ffd3e0;
+  --ink: #5c2438;
+  --ink-soft: #9a5a72;
+  --pink: #f4538a;
+  --pink-deep: #d9366e;
+  --pink-soft: #ffe0eb;
+  --pink-pale: #fff5f8;
+  --gold: #e9a13b;
+  --field: #fff7fa;
+  --field-border: #f6c3d4;
+  --shadow: 0 24px 60px rgba(217, 54, 110, 0.18), 0 4px 16px rgba(217, 54, 110, 0.08);
+  --radius-card: 28px;
+  /* aliases used by Home.vue */
+  --pink-50: #fff5f8;
+  --pink-100: #ffe4ec;
+  --pink-200: #f6c3d4;
+  --pink-300: #ffa8c2;
+  --pink-400: #ff7aa8;
+  --pink-500: #f4538a;
+  --pink-600: #d9366e;
+  --rose: #f4538a;
+  --muted: #9a5a72;
+  --white: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #27121d;
+    --bg-soft: #331826;
+    --card: #3a1e2e;
+    --card-border: #5f344a;
+    --ink: #ffe9f1;
+    --ink-soft: #e3a9be;
+    --pink: #ff7aa8;
+    --pink-deep: #ff5c93;
+    --pink-soft: #552a3f;
+    --pink-pale: #462233;
+    --field: #462233;
+    --field-border: #6d4358;
+    --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    --pink-50: #462233;
+    --pink-100: #552a3f;
+    --pink-200: #6d4358;
+    --pink-300: #e3a9be;
+    --pink-400: #ff7aa8;
+    --pink-500: #ff7aa8;
+    --pink-600: #ff5c93;
+    --muted: #e3a9be;
+  }
+}
+
+html, body, #app { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: "Quicksand", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background:
+    radial-gradient(560px 380px at 8% -4%, var(--bg-soft), transparent 70%),
+    radial-gradient(640px 420px at 102% 108%, var(--bg-soft), transparent 70%),
+    var(--bg);
+  color: var(--ink);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+.display {
+  font-family: "ZCOOL KuaiLe", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 400;
+}
+
+button { font-family: inherit; cursor: pointer; }
+input { font-family: inherit; }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes fall {
+  0% { transform: translate3d(0, -4vh, 0) rotate(0deg); }
+  100% { transform: translate3d(4vw, 108vh, 0) rotate(320deg); }
+}
+@keyframes pop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.14); }
+  45% { transform: scale(0.98); }
+  60% { transform: scale(1.1); }
+}
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.35); }
+}
+@keyframes burst {
+  0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1.1) rotate(var(--rot)); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
