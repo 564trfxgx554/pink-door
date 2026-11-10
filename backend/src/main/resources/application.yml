@@ -41,6 +41,9 @@ pink-door:
     allowed-origins:
       - http://localhost:5173
       - http://127.0.0.1:5173
+      # 线上前端的访问域名（帽子云每次部署的子域名是快照，访问域名才是最新版）。
+      - https://pinkdoor-10h3c3o2.maozi.io
+      - https://qrlvmfwjm-pinkdoor-10h3c3o2.maozi.io
   preset-account:
     # 唯一的预置账号。首次启动自动创建，之后每次启动都与这里的配置同步
     # （改完暗号重启即可生效）。
