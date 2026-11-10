@@ -142,22 +142,6 @@
           </div>
         </div>
 
-        <details class="dev-note">
-          <summary>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
-            给后端留的接口（Java 那边照着接就行）
-          </summary>
-          <pre>POST /api/auth/login
-{ "nickname": "昵称", "password": "暗号" }
-
-→ 200 { "token": "JWT", "nickname": "昵称" }
-→ 401 { "message": "暗号不对哦" }
-
-前端默认直连真实后端；需要纯前端演示时，
-在 .env 中设置 VITE_USE_MOCK_AUTH=true。
-登录成功后 token 存 sessionStorage，
-不要把大模型 key 放前端。</pre>
-        </details>
       </section>
 
       <p class="page-foot">
@@ -574,42 +558,6 @@ h1 .accent { color: var(--pink-deep); position: relative; white-space: nowrap; }
 .ghost-btn:hover { background: var(--pink-soft); }
 .burst-heart { position: absolute; pointer-events: none; animation: burst 1s ease-out forwards; left: 50%; top: 56px; }
 .burst-heart svg { fill: var(--pink); display: block; width: 100%; height: 100%; }
-
-/* dev note */
-.dev-note { margin-top: 18px; }
-.dev-note summary {
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink-soft);
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.dev-note summary::-webkit-details-marker { display: none; }
-.dev-note summary svg {
-  width: 14px;
-  height: 14px;
-  stroke: var(--ink-soft);
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.dev-note pre {
-  margin: 10px 0 0;
-  background: var(--pink-pale);
-  border: 1.5px solid var(--card-border);
-  border-radius: 14px;
-  padding: 13px 15px;
-  overflow-x: auto;
-  font-size: 12.5px;
-  line-height: 1.7;
-  color: var(--ink);
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  white-space: pre-wrap;
-}
 
 .page-foot {
   grid-column: 1 / -1;

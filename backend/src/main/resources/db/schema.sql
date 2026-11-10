@@ -52,21 +52,9 @@ CREATE INDEX IF NOT EXISTS idx_pd_ai_conversation_user
 CREATE INDEX IF NOT EXISTS idx_pd_ai_message_conversation
     ON pd_ai_message (conversation_id, id);
 
--- PostgreSQL has no ON UPDATE for columns: keep updated_at fresh with a
--- trigger instead (the app never writes updated_at itself).
-CREATE OR REPLACE FUNCTION set_updated_at() RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS trg_pd_user_updated_at ON pd_user;
-CREATE TRIGGER trg_pd_user_updated_at
-    BEFORE UPDATE ON pd_user
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
-
-DROP TRIGGER IF EXISTS trg_pd_ai_conversation_updated_at ON pd_ai_conversation;
-CREATE TRIGGER trg_pd_ai_conversation_updated_at
-    BEFORE UPDATE ON pd_ai_conversation
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+-- NOTE: PostgreSQL has no ON UPDATE for columns. The updated_at trigger
+-- used to live here, but Spring Boot's SQL script runner splits scripts on
+-- semicolons and cannot parse a $$-quoted PL/pgSQL function body, which
+-- crashed the app at startup. So there is intentionally no trigger: the
+-- app never writes updated_at itself (FieldStrategy.NEVER) and orders
+-- conversations by last_message_at, which the app updates explicitly.

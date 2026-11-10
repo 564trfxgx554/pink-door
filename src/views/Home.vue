@@ -30,13 +30,10 @@
           <div class="card-icon">📸</div>
           <h2>我们的相册</h2>
           <p>你拍的每一张好看的照片，都按旅行、生日、日常好好收着。</p>
-          <span class="tag">即将上线 — Java 后端</span>
+          <span class="tag">即将上线</span>
         </article>
       </div>
 
-      <p class="note">
-        这是登录之后的主页，上面三个入口是下一步要做的页面，风格和登录页一样。
-      </p>
     </main>
   </div>
 </template>
@@ -73,7 +70,6 @@ function handleLogout() {
 .card h2 { margin: 10px 0 6px; color: var(--pink-600); font-size: 21px; }
 .card p { color: var(--muted); line-height: 1.55; margin: 0 0 14px; }
 .tag { display: inline-block; background: var(--pink-100); color: var(--pink-600); font-size: 12.5px; font-weight: 600; border-radius: 999px; padding: 5px 10px; }
-.note { margin-top: 28px; color: var(--muted); font-size: 14px; }
 @media (max-width: 760px) {
   .cards { grid-template-columns: 1fr; }
   .main h1 { font-size: 30px; }
