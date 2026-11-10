@@ -14,12 +14,12 @@
       <p class="lead">这扇粉色小门后面，藏着一个只属于我们两个人的地方</p>
 
       <div class="cards">
-        <article class="card">
+        <router-link to="/ai" class="card card-link">
           <div class="card-icon">💬</div>
           <h2>AI 小助手</h2>
           <p>陪你聊天、写小情书、想约会点子，还记得我们的纪念日。</p>
-          <span class="tag">即将上线 — Python + LangChain</span>
-        </article>
+          <span class="tag">去和小婷段聊天 →</span>
+        </router-link>
         <article class="card">
           <div class="card-icon">🎮</div>
           <h2>情侣小游戏</h2>
@@ -67,6 +67,8 @@ function handleLogout() {
 .lead { color: var(--muted); font-size: 18px; margin: 0 0 32px; }
 .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .card { background: var(--card); border: 1px solid var(--pink-200); border-radius: 22px; box-shadow: var(--shadow); padding: 28px 22px; text-align: left; }
+.card-link { display: block; color: inherit; text-decoration: none; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.card-link:hover { transform: translateY(-4px); box-shadow: 0 18px 36px rgba(217, 54, 110, 0.22); }
 .card-icon { font-size: 36px; }
 .card h2 { margin: 10px 0 6px; color: var(--pink-600); font-size: 21px; }
 .card p { color: var(--muted); line-height: 1.55; margin: 0 0 14px; }

@@ -1,12 +1,15 @@
 <script setup>
-// The original illustration from the Pink Door login page (white cat
-// with a big pink bow + pink rabbit in a pink hood, surrounded by
-// roses, cherry blossoms and hearts) is inlined as a base64 data URI
-// in ../assets/hero.js so the repo stays text-only.
 import hero from '../assets/hero.js'
 </script>
 
 <template>
+  <!--
+    The illustration from the original Pink Door login page:
+    src/assets/hero.js (base64, inlined from hero.webp) is the same image
+    (white cat with a big pink bow + pink rabbit in a pink hood,
+    surrounded by roses, cherry blossoms and hearts).
+    Using the original image here so the Vue page looks identical.
+  -->
   <img
     :src="hero"
     class="hero-img"

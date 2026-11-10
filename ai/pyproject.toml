@@ -1,0 +1,18 @@
+[project]
+name = "pink-door-ai"
+version = "0.1.0"
+description = "Pink Door AI assistant service (FastAPI + LangChain)"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.30,<1.0",
+    "pydantic-settings>=2.4,<3.0",
+    "python-dotenv>=1.0,<2.0",
+    "langchain-core>=0.3,<2.0",
+    "langchain-openai>=0.3,<2.0",
+    "langchain-anthropic>=0.3,<2.0",
+]
+
+# 这是一个应用而不是需要发布/安装的库，uv sync 只安装依赖。
+[tool.uv]
+package = false

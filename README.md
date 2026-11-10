@@ -18,15 +18,6 @@ code comments and this README stay in English.
 - Left: "欢迎回家，我的小公主", "这扇粉色小门后面，藏着一个只属于我们两个人的地方",
   hero badge "今天也超级喜欢你", and the three feature cards
   (AI 小助手 / 情侣小游戏 / 我们的相册) with their original descriptions.
-
-## Deployment note (China-accessible hosting)
-
-Fonts are self-hosted via `@fontsource/quicksand` and
-`@fontsource/zcool-kuaile` (bundled at build time, no Google Fonts
-requests), and the hero illustration is inlined as a base64 data URI
-in `src/assets/hero.js`, so this repo is text-only and can be pushed
-with the GitHub API. Deploy from this repo with build command
-`npm run build` and output directory `dist`.
 - Right: login card "推开这扇粉色小门", fields 你的昵称 / 我们的暗号
   (password, with show/hide eye), button "带着爱心进去", and the
   success state "欢迎回来，宝贝" with "进入我们的首页".
