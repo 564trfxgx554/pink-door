@@ -17,17 +17,25 @@
     <main class="layout">
       <aside class="sidebar">
         <p class="sidebar-title">我们的聊天</p>
-        <button
+        <div
           v-for="conversation in conversations"
           :key="conversation.id"
           class="conversation"
           :class="{ active: conversation.id === currentId }"
-          type="button"
-          @click="openConversation(conversation.id)"
         >
-          <span class="conv-title">{{ conversation.title }}</span>
-          <span class="conv-time">{{ shortTime(conversation.lastMessageAt) }}</span>
-        </button>
+          <button type="button" class="conv-open" @click="openConversation(conversation.id)">
+            <span class="conv-title">{{ conversation.title }}</span>
+            <span class="conv-time">{{ shortTime(conversation.lastMessageAt) }}</span>
+          </button>
+          <button
+            type="button"
+            class="conv-delete"
+            title="删除这个会话"
+            @click="removeConversation(conversation.id, conversation.title)"
+          >
+            ×
+          </button>
+        </div>
         <p v-if="!conversations.length" class="empty-hint">还没有聊天记录，先从一句话开始吧。</p>
       </aside>
 
@@ -87,7 +95,7 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import Petals from '../components/Petals.vue'
-import { listConversations, listMessages, streamChat } from '../api/ai.js'
+import { deleteConversation, listConversations, listMessages, streamChat } from '../api/ai.js'
 
 const router = useRouter()
 const conversations = ref([])
@@ -158,6 +166,24 @@ function startNewChat() {
   messages.value = []
   input.value = ''
   error.value = ''
+}
+
+async function removeConversation(conversationId, title) {
+  if (sending.value) return
+  if (!window.confirm(`确定删除「${title || '这个会话'}」吗？里面的消息都会一起删掉，不能恢复。`)) return
+  try {
+    await deleteConversation(conversationId)
+    conversations.value = conversations.value.filter((item) => item.id !== conversationId)
+    if (currentId.value === conversationId) {
+      currentId.value = null
+      messages.value = []
+      if (conversations.value.length) {
+        await openConversation(conversations.value[0].id)
+      }
+    }
+  } catch (value) {
+    showError(value)
+  }
 }
 
 async function send() {
@@ -346,17 +372,55 @@ onBeforeUnmount(() => {
 .conversation {
   width: 100%;
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  padding: 10px 8px 10px 12px;
+  margin-bottom: 6px;
+  color: var(--ink);
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.conv-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
   flex-direction: column;
   gap: 4px;
   align-items: flex-start;
   text-align: left;
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: 14px;
-  padding: 10px 12px;
-  margin-bottom: 6px;
-  color: var(--ink);
-  transition: background 0.18s ease, border-color 0.18s ease;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.conv-delete {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+}
+
+.conv-delete:hover {
+  background: rgba(192, 57, 43, 0.12);
+  color: #c0392b;
+  opacity: 1;
 }
 
 .conversation:hover,

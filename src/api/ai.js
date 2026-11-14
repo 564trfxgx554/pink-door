@@ -44,6 +44,10 @@ export async function listMessages(conversationId) {
   return result.data || []
 }
 
+export async function deleteConversation(conversationId) {
+  await request(`/api/ai/conversations/${conversationId}`, { method: 'DELETE' })
+}
+
 /**
  * 发起流式聊天。
  * onEvent 会收到 meta / delta / done / error 四种事件。
