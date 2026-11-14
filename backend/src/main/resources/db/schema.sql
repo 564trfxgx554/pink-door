@@ -82,10 +82,13 @@ CREATE INDEX IF NOT EXISTS idx_pd_ai_conversation_couple_user
 
 -- NOTE: 云上已有的用户行和会话行，couple_id 初始为 NULL。启动时
 -- PresetAccountInitializer 会按 preset-accounts 把两个账号绑到空间上；
--- 旧的 pd_ai_conversation 行需要另外手动回填一次（见部署说明），否则
--- 租户插件会把它们过滤掉：
---   UPDATE pd_ai_conversation c SET couple_id = u.couple_id
---     FROM pd_user u WHERE c.user_id = u.id AND c.couple_id IS NULL;
+-- 旧的 pd_ai_conversation 行由下面这条语句自动回填：第一次启动时
+-- 用户的 couple_id 还没绑上，它什么都不做；下一次启动就生效，
+-- 之后每次启动都已是空操作，所以放在这里是安全的。
+
+UPDATE pd_ai_conversation c SET couple_id = u.couple_id
+  FROM pd_user u WHERE c.user_id = u.id AND c.couple_id IS NULL
+  AND u.couple_id IS NOT NULL;
 
 -- ========== 默契问答 ==========
 
