@@ -30,10 +30,14 @@
           <button
             type="button"
             class="conv-delete"
-            title="删除这个会话"
-            @click="removeConversation(conversation.id, conversation.title)"
+            title="删除会话"
+            :aria-label="`删除会话：${conversation.title}`"
+            :disabled="sending || deletingId === conversation.id"
+            @click.stop="askDelete(conversation)"
           >
-            ×
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6" />
+            </svg>
           </button>
         </div>
         <p v-if="!conversations.length" class="empty-hint">还没有聊天记录，先从一句话开始吧。</p>
@@ -88,6 +92,25 @@
         <p class="composer-note">小婷段是 AI 小助手，真正抱你的是他。</p>
       </section>
     </main>
+
+    <div v-if="deleteTarget" class="modal-mask" @click.self="cancelDelete">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="delete-title">
+        <div class="modal-bow" aria-hidden="true">🎀</div>
+        <h3 id="delete-title">删除这段聊天？</h3>
+        <p>「{{ deleteTarget.title }}」删除后就找不回来了。</p>
+        <div class="modal-actions">
+          <button type="button" class="modal-cancel" @click="cancelDelete">再想想</button>
+          <button
+            type="button"
+            class="modal-confirm"
+            :disabled="deletingId !== null"
+            @click="confirmDelete"
+          >
+            {{ deletingId !== null ? '删除中…' : '确认删除' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -103,6 +126,8 @@ const messages = ref([])
 const input = ref('')
 const currentId = ref(null)
 const sending = ref(false)
+const deletingId = ref(null)
+const deleteTarget = ref(null)
 const error = ref('')
 const scrollEl = ref(null)
 
@@ -168,21 +193,39 @@ function startNewChat() {
   error.value = ''
 }
 
-async function removeConversation(conversationId, title) {
+function askDelete(conversation) {
   if (sending.value) return
-  if (!window.confirm(`确定删除「${title || '这个会话'}」吗？里面的消息都会一起删掉，不能恢复。`)) return
+  deleteTarget.value = conversation
+}
+
+function cancelDelete() {
+  if (deletingId.value !== null) return
+  deleteTarget.value = null
+}
+
+async function confirmDelete() {
+  const target = deleteTarget.value
+  if (!target || sending.value || deletingId.value !== null) return
+
+  deletingId.value = target.id
+  const wasCurrent = currentId.value === target.id
   try {
-    await deleteConversation(conversationId)
-    conversations.value = conversations.value.filter((item) => item.id !== conversationId)
-    if (currentId.value === conversationId) {
+    await deleteConversation(target.id)
+    conversations.value = conversations.value.filter((item) => item.id !== target.id)
+    deleteTarget.value = null
+
+    if (wasCurrent) {
       currentId.value = null
       messages.value = []
+      error.value = ''
       if (conversations.value.length) {
         await openConversation(conversations.value[0].id)
       }
     }
   } catch (value) {
     showError(value)
+  } finally {
+    deletingId.value = null
   }
 }
 
@@ -402,25 +445,48 @@ onBeforeUnmount(() => {
 
 .conv-delete {
   flex: none;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
   border: none;
-  border-radius: 50%;
+  border-radius: 9px;
   background: transparent;
   color: var(--ink-soft);
-  font-size: 17px;
-  line-height: 1;
-  cursor: pointer;
-  opacity: 0.55;
-  transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+  opacity: 0;
+  transition: opacity 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
-.conv-delete:hover {
-  background: rgba(192, 57, 43, 0.12);
-  color: #c0392b;
+.conv-delete svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.conversation:hover .conv-delete,
+.conversation.active .conv-delete,
+.conv-delete:focus-visible {
   opacity: 1;
+}
+
+.conv-delete:hover:not(:disabled) {
+  background: rgba(217, 54, 110, 0.1);
+  color: var(--pink-deep);
+}
+
+.conv-delete:disabled {
+  opacity: 0.4;
+  cursor: wait;
+}
+
+@media (hover: none) {
+  .conv-delete {
+    opacity: 1;
+  }
 }
 
 .conversation:hover,
@@ -662,6 +728,80 @@ onBeforeUnmount(() => {
   color: var(--ink-soft);
   font-size: 11px;
   text-align: right;
+}
+
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(91, 42, 63, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.modal-card {
+  width: min(380px, 100%);
+  padding: 28px 24px 22px;
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  text-align: center;
+  animation: pop 0.22s ease;
+}
+
+.modal-bow {
+  margin-top: -50px;
+  margin-bottom: 4px;
+  font-size: 32px;
+  animation: wiggle 2.5s ease-in-out infinite;
+}
+
+.modal-card h3 {
+  margin: 0 0 8px;
+  color: var(--pink-deep);
+  font-size: 20px;
+}
+
+.modal-card p {
+  margin: 0 0 20px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+  height: 42px;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.modal-cancel {
+  border: 1px solid var(--card-border);
+  background: var(--pink-pale);
+  color: var(--ink);
+}
+
+.modal-confirm {
+  border: none;
+  background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(217, 54, 110, 0.24);
+}
+
+.modal-confirm:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 @media (prefers-color-scheme: dark) {
