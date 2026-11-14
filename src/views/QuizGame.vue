@@ -33,8 +33,8 @@
           </div>
         </div>
 
-        <button class="primary" :disabled="myReady || members.length < 2" @click="ready">
-          {{ myReady ? '等对方准备好…' : '我准备好了' }}
+        <button class="primary" :disabled="myReady || members.length < 2 || !connected" @click="ready">
+          {{ myReady ? '等对方准备好…' : (connected ? '我准备好了' : '正在连线…') }}
         </button>
         <p class="hint">房间 #{{ roomId }} · 同一空间的另一个人会自动进来</p>
       </section>
@@ -156,6 +156,7 @@ const reveal = ref(null)
 const result = ref(null)
 const remaining = ref(0)
 const connectionText = ref('')
+const connected = ref(false)
 const errorText = ref('')
 
 const optionLabels = ['A', 'B', 'C', 'D']
@@ -323,9 +324,14 @@ async function connect() {
     onMessage: handleMessage,
     onStatus: (status) => {
       if (status === 'connected') {
+        connected.value = true
         connectionText.value = ''
       } else if (status === 'failed') {
+        connected.value = false
         connectionText.value = '连接断开了，请刷新页面重试。'
+      } else {
+        // closed：正在重连中，准备按钮先禁用，等连上再恢复。
+        connected.value = false
       }
     }
   })

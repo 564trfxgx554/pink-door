@@ -53,6 +53,9 @@ export function connectQuiz({ token, roomId, onMessage, onStatus }) {
   let retries = 0
   let closedByUser = false
   let reconnectTimer = null
+  // 用户点过准备后就记住：断线重连时 join 之后要把 ready 补发一次，
+  // 不然准备会在重连那一刻丢掉，前端看着是“已准备”后端却不知道。
+  let readySent = false
 
   function send(payload) {
     if (socket?.readyState === WebSocket.OPEN) {
@@ -70,6 +73,8 @@ export function connectQuiz({ token, roomId, onMessage, onStatus }) {
       onStatus?.('connected')
       // 每次连上都补一次 join，刷新或断线重连都能恢复现场。
       send({ type: 'join', roomId })
+      // 如果用户之前已经点过准备，重连后把 ready 补发一次。
+      if (readySent) send({ type: 'ready' })
     }
     socket.onmessage = (event) => {
       let data
@@ -97,6 +102,8 @@ export function connectQuiz({ token, roomId, onMessage, onStatus }) {
 
   return {
     sendReady() {
+      // 先记住再发送：就算这次 socket 还没连上，下次连上时也会补发。
+      readySent = true
       send({ type: 'ready' })
     },
     sendAnswer(roundNo, optionIndex) {
