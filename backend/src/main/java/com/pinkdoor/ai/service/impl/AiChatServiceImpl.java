@@ -1,5 +1,6 @@
 package com.pinkdoor.ai.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,6 +11,7 @@ import com.pinkdoor.ai.dto.AiChatPayload;
 import com.pinkdoor.ai.dto.AiChatRequest;
 import com.pinkdoor.ai.entity.AiConversation;
 import com.pinkdoor.ai.entity.AiMessage;
+import com.pinkdoor.ai.mapper.AiConversationMapper;
 import com.pinkdoor.ai.service.AiChatService;
 import com.pinkdoor.ai.service.AiConversationService;
 import com.pinkdoor.ai.service.AiMessageService;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.Disposable;
@@ -52,13 +55,16 @@ public class AiChatServiceImpl implements AiChatService {
 
     private final AiConversationService conversationService;
     private final AiMessageService messageService;
+    private final AiConversationMapper conversationMapper;
     private final AiClient aiClient;
     private final AiProperties aiProperties;
     private final ObjectMapper objectMapper;
 
     @Override
-    public List<AiConversationVO> listConversations(Long userId) {
+    public List<AiConversationVO> listConversations(Long userId, Long coupleId) {
         return conversationService.lambdaQuery()
+                // 租户插件会自动追加 couple_id，这里显式写出，读代码时能直接看到边界。
+                .eq(AiConversation::getCoupleId, coupleId)
                 .eq(AiConversation::getUserId, userId)
                 .orderByDesc(AiConversation::getLastMessageAt)
                 .list()
@@ -72,8 +78,8 @@ public class AiChatServiceImpl implements AiChatService {
     }
 
     @Override
-    public List<AiMessageVO> listMessages(Long userId, Long conversationId) {
-        requireOwnedConversation(userId, conversationId);
+    public List<AiMessageVO> listMessages(Long userId, Long coupleId, Long conversationId) {
+        requireOwnedConversation(userId, coupleId, conversationId);
         return messageService.lambdaQuery()
                 .eq(AiMessage::getConversationId, conversationId)
                 .orderByAsc(AiMessage::getId)
@@ -89,9 +95,20 @@ public class AiChatServiceImpl implements AiChatService {
     }
 
     @Override
-    public SseEmitter streamChat(Long userId, String nickname, AiChatRequest request) {
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteConversation(Long userId, Long coupleId, Long conversationId) {
+        requireOwnedConversation(userId, coupleId, conversationId);
+        messageService.remove(new LambdaQueryWrapper<AiMessage>()
+                .eq(AiMessage::getConversationId, conversationId));
+        if (!conversationService.removeById(conversationId)) {
+            throw new BusinessException(ResultCode.INTERNAL_ERROR.getCode(), "删除会话失败。");
+        }
+    }
+
+    @Override
+    public SseEmitter streamChat(Long userId, Long coupleId, String nickname, AiChatRequest request) {
         String content = request.getContent().trim();
-        AiConversation conversation = resolveConversation(userId, request);
+        AiConversation conversation = resolveConversation(userId, coupleId, request);
         saveMessage(conversation.getId(), ROLE_USER, content);
         touchConversation(conversation.getId());
 
@@ -134,9 +151,10 @@ public class AiChatServiceImpl implements AiChatService {
         return emitter;
     }
 
-    private AiConversation resolveConversation(Long userId, AiChatRequest request) {
+    private AiConversation resolveConversation(Long userId, Long coupleId, AiChatRequest request) {
         if (request.getConversationId() == null) {
             AiConversation conversation = new AiConversation();
+            conversation.setCoupleId(coupleId);
             conversation.setUserId(userId);
             conversation.setTitle(buildTitle(request.getContent()));
             if (!conversationService.save(conversation)) {
@@ -144,12 +162,18 @@ public class AiChatServiceImpl implements AiChatService {
             }
             return conversation;
         }
-        return requireOwnedConversation(userId, request.getConversationId());
+        return requireOwnedConversation(userId, coupleId, request.getConversationId());
     }
 
-    private AiConversation requireOwnedConversation(Long userId, Long conversationId) {
+    /**
+     * 校验会话归属：先确认在同一个情侣空间，再确认是本人。
+     * 跨空间和不存在都返回 404，不泄露其他空间是否存在该会话。
+     */
+    private AiConversation requireOwnedConversation(Long userId, Long coupleId, Long conversationId) {
         AiConversation conversation = conversationService.getById(conversationId);
-        if (conversation == null || !userId.equals(conversation.getUserId())) {
+        if (conversation == null
+                || !userId.equals(conversation.getUserId())
+                || !coupleId.equals(conversation.getCoupleId())) {
             throw new BusinessException(ResultCode.NOT_FOUND.getCode(), "会话不存在。");
         }
         return conversation;
@@ -170,11 +194,13 @@ public class AiChatServiceImpl implements AiChatService {
         messageService.save(message);
     }
 
+    /**
+     * 刷新会话最后消息时间。
+     * 可能在 SSE 异步线程执行，必须走跳过租户插件的 Mapper 方法，
+     * 否则 UserContext 为空会导致 couple_id 条件错误、更新静默失败。
+     */
     private void touchConversation(Long conversationId) {
-        conversationService.lambdaUpdate()
-                .eq(AiConversation::getId, conversationId)
-                .set(AiConversation::getLastMessageAt, LocalDateTime.now())
-                .update();
+        conversationMapper.touchLastMessageAt(conversationId, LocalDateTime.now());
     }
 
     private List<AiMessage> loadRecentMessages(Long conversationId) {

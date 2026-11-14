@@ -20,6 +20,11 @@ public class User {
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 所属情侣空间，多租户的边界字段。
+     */
+    private Long coupleId;
+
     private String nickname;
 
     @JsonIgnore
@@ -28,7 +33,7 @@ public class User {
     private String avatar;
 
     /**
-     * 时间戳由 数据库 维护（DEFAULT CURRENT_TIMESTAMP / ON UPDATE），
+     * 时间戳由 MySQL 维护（DEFAULT CURRENT_TIMESTAMP / ON UPDATE），
      * MyBatis-Plus 更新时禁止写回，否则 updated_at 不会自动刷新。
      */
     @TableField(updateStrategy = FieldStrategy.NEVER)

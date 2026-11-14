@@ -19,6 +19,14 @@ public class AiConversation {
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 所属情侣空间，租户外层。
+     */
+    private Long coupleId;
+
+    /**
+     * 所属用户，空间内私有，另一个人看不到。
+     */
     private Long userId;
 
     private String title;
@@ -26,7 +34,7 @@ public class AiConversation {
     private LocalDateTime lastMessageAt;
 
     /**
-     * 时间戳由 数据库 维护，更新时禁止写回。
+     * 时间戳由 MySQL 维护，更新时禁止写回。
      */
     @TableField(updateStrategy = FieldStrategy.NEVER)
     private LocalDateTime createdAt;

@@ -9,6 +9,7 @@ import com.pinkdoor.security.UserContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,12 +32,24 @@ public class AiChatController {
 
     @GetMapping("/conversations")
     public Result<List<AiConversationVO>> listConversations() {
-        return Result.success(aiChatService.listConversations(UserContext.getUserId()));
+        return Result.success(aiChatService.listConversations(
+                UserContext.getUserId(), UserContext.getCoupleId()));
     }
 
     @GetMapping("/conversations/{conversationId}/messages")
     public Result<List<AiMessageVO>> listMessages(@PathVariable Long conversationId) {
-        return Result.success(aiChatService.listMessages(UserContext.getUserId(), conversationId));
+        return Result.success(aiChatService.listMessages(
+                UserContext.getUserId(), UserContext.getCoupleId(), conversationId));
+    }
+
+    /**
+     * 删除会话及其全部消息，不可恢复。
+     */
+    @DeleteMapping("/conversations/{conversationId}")
+    public Result<Void> deleteConversation(@PathVariable Long conversationId) {
+        aiChatService.deleteConversation(
+                UserContext.getUserId(), UserContext.getCoupleId(), conversationId);
+        return Result.success();
     }
 
     /**
@@ -46,6 +59,7 @@ public class AiChatController {
     public SseEmitter chat(@Valid @RequestBody AiChatRequest request) {
         return aiChatService.streamChat(
                 UserContext.getUserId(),
+                UserContext.getCoupleId(),
                 UserContext.getNickname(),
                 request
         );

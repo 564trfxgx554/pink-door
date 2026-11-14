@@ -20,17 +20,17 @@
           <p>陪你聊天、写小情书、想约会点子，还记得我们的纪念日。</p>
           <span class="tag">去和小婷段聊天 →</span>
         </router-link>
-        <article class="card">
+        <article class="card clickable" @click="router.push('/games')">
           <div class="card-icon">🎮</div>
           <h2>情侣小游戏</h2>
           <p>照片记忆翻牌、默契问答、拼图，输了的人要请奶茶。</p>
-          <span class="tag">即将上线</span>
+          <span class="tag">8 个小游戏 · 照片翻牌可以玩啦 →</span>
         </article>
         <article class="card">
           <div class="card-icon">📸</div>
           <h2>我们的相册</h2>
           <p>你拍的每一张好看的照片，都按旅行、生日、日常好好收着。</p>
-          <span class="tag">即将上线</span>
+          <span class="tag">即将上线 — Java 后端</span>
         </article>
       </div>
 
@@ -66,6 +66,8 @@ function handleLogout() {
 .card { background: var(--card); border: 1px solid var(--pink-200); border-radius: 22px; box-shadow: var(--shadow); padding: 28px 22px; text-align: left; }
 .card-link { display: block; color: inherit; text-decoration: none; transition: transform 0.18s ease, box-shadow 0.18s ease; }
 .card-link:hover { transform: translateY(-4px); box-shadow: 0 18px 36px rgba(217, 54, 110, 0.22); }
+.card.clickable { cursor: pointer; }
+.card.clickable:hover { transform: translateY(-3px); }
 .card-icon { font-size: 36px; }
 .card h2 { margin: 10px 0 6px; color: var(--pink-600); font-size: 21px; }
 .card p { color: var(--muted); line-height: 1.55; margin: 0 0 14px; }

@@ -20,20 +20,6 @@
           </div>
         </div>
 
-        <ul class="features">
-          <li>
-            <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg></span>
-            <div><b>AI 小助手</b><span>陪你聊天、写小情书、想约会点子，还记得我们的纪念日。</span></div>
-          </li>
-          <li>
-            <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="11" x2="10" y2="11" /><line x1="8" y1="9" x2="8" y2="13" /><line x1="15" y1="12" x2="15.01" y2="12" /><line x1="18" y1="10" x2="18.01" y2="10" /><path d="M17.32 5H6.68a4.68 4.68 0 0 0-4.583 5.628l.933 5.6A3 3 0 0 0 5.99 18.5c.87 0 1.71-.35 2.32-.97L9.5 16.5h5l1.19 1.03c.61.62 1.45.97 2.32.97a3 3 0 0 0 2.96-2.272l.933-5.6A4.68 4.68 0 0 0 17.32 5Z" /></svg></span>
-            <div><b>情侣小游戏</b><span>照片记忆翻牌、默契问答、拼图，输了的人要请奶茶。</span></div>
-          </li>
-          <li>
-            <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21" /></svg></span>
-            <div><b>我们的相册</b><span>你拍的每一张好看的照片，都按旅行、生日、日常好好收着。</span></div>
-          </li>
-        </ul>
       </section>
 
       <!-- 右侧：登录卡 -->
@@ -144,11 +130,28 @@
 
       </section>
 
-      <p class="page-foot">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-        用代码和真心，一起为你做的 · 粉色小屋
-      </p>
     </main>
+
+    <!-- 底部：三个功能横排铺满整行，不再挤在左边 -->
+    <ul class="features">
+      <li>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg></span>
+        <div><b>AI 小助手</b><span>陪你聊天、写小情书、想约会点子，还记得我们的纪念日。</span></div>
+      </li>
+      <li>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="11" x2="10" y2="11" /><line x1="8" y1="9" x2="8" y2="13" /><line x1="15" y1="12" x2="15.01" y2="12" /><line x1="18" y1="10" x2="18.01" y2="10" /><path d="M17.32 5H6.68a4.68 4.68 0 0 0-4.583 5.628l.933 5.6A3 3 0 0 0 5.99 18.5c.87 0 1.71-.35 2.32-.97L9.5 16.5h5l1.19 1.03c.61.62 1.45.97 2.32.97a3 3 0 0 0 2.96-2.272l.933-5.6A4.68 4.68 0 0 0 17.32 5Z" /></svg></span>
+        <div><b>情侣小游戏</b><span>照片记忆翻牌、默契问答、拼图，输了的人要请奶茶。</span></div>
+      </li>
+      <li>
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21" /></svg></span>
+        <div><b>我们的相册</b><span>你拍的每一张好看的照片，都按旅行、生日、日常好好收着。</span></div>
+      </li>
+    </ul>
+
+    <p class="page-foot">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+      用代码和真心，一起为你做的 · 粉色小屋
+    </p>
 
     <div class="toast" :class="{ show: toastVisible }" role="status" aria-live="polite">{{ toastMessage }}</div>
   </div>
@@ -272,12 +275,11 @@ function backToLogin() {
   z-index: 1;
   max-width: 1060px;
   margin: 0 auto;
-  padding: 36px 20px 28px;
+  padding: 36px 20px 8px;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 44px;
   align-items: center;
-  min-height: 100dvh;
 }
 
 /* ---------- left intro ---------- */
@@ -305,12 +307,12 @@ h1 .accent { color: var(--pink-deep); position: relative; white-space: nowrap; }
   font-size: 16.5px;
   line-height: 1.85;
   color: var(--ink-soft);
-  margin: 0 0 24px;
+  margin: 0 0 18px;
   max-width: 30em;
   font-weight: 600;
 }
 
-.hero-frame { position: relative; max-width: 430px; }
+.hero-frame { position: relative; max-width: 372px; }
 .hero-badge {
   position: absolute;
   right: -10px;
@@ -330,12 +332,15 @@ h1 .accent { color: var(--pink-deep); position: relative; white-space: nowrap; }
 .hero-badge svg { width: 16px; height: 16px; fill: var(--pink); flex: none; }
 
 .features {
+  position: relative;
+  z-index: 1;
   list-style: none;
-  margin: 26px 0 0;
-  padding: 0;
+  margin: 20px auto 0;
+  padding: 0 20px;
+  max-width: 1060px;
   display: grid;
-  gap: 12px;
-  max-width: 430px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 .features li {
   display: flex;
@@ -374,7 +379,7 @@ h1 .accent { color: var(--pink-deep); position: relative; white-space: nowrap; }
   border: 1.5px solid var(--card-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow);
-  padding: 38px 34px 30px;
+  padding: 52px 34px 46px;
 }
 .card.shake { animation: shake 0.45s ease; }
 .bow {
@@ -560,12 +565,14 @@ h1 .accent { color: var(--pink-deep); position: relative; white-space: nowrap; }
 .burst-heart svg { fill: var(--pink); display: block; width: 100%; height: 100%; }
 
 .page-foot {
-  grid-column: 1 / -1;
+  position: relative;
+  z-index: 1;
   text-align: center;
   color: var(--ink-soft);
   font-size: 13px;
   font-weight: 600;
-  padding-top: 4px;
+  padding: 22px 20px 28px;
+  margin: 0;
 }
 .page-foot svg { width: 12px; height: 12px; fill: var(--pink); vertical-align: -1px; }
 
@@ -591,11 +598,11 @@ h1 .accent { color: var(--pink-deep); position: relative; white-space: nowrap; }
 .toast.show { transform: translate(-50%, 0); }
 
 @media (max-width: 860px) {
-  .shell { grid-template-columns: 1fr; gap: 30px; padding: 28px 16px 22px; min-height: 0; }
+  .shell { grid-template-columns: 1fr; gap: 30px; padding: 28px 16px 8px; min-height: 0; }
   .intro { text-align: center; }
   .lead { margin-left: auto; margin-right: auto; }
   .hero-frame { margin: 0 auto; max-width: 360px; }
-  .features { margin-left: auto; margin-right: auto; text-align: left; }
+  .features { grid-template-columns: 1fr; padding: 0 16px; text-align: left; }
   .card { padding: 34px 22px 26px; }
   h1 { font-size: 36px; }
 }

@@ -21,6 +21,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final String CLAIM_NICKNAME = "nickname";
+    private static final String CLAIM_COUPLE_ID = "couple_id";
     private static final int MIN_SECRET_BYTES = 32;
 
     private final SecretKey secretKey;
@@ -46,12 +47,14 @@ public class JwtTokenProvider {
         this.expireHours = properties.getExpireHours();
     }
 
-    public String generateToken(Long userId, String nickname) {
+    public String generateToken(Long userId, String nickname, Long coupleId) {
         Instant issuedAt = Instant.now();
         Instant expiresAt = issuedAt.plus(expireHours, ChronoUnit.HOURS);
         return Jwts.builder()
                 .subject(String.valueOf(userId))
                 .claim(CLAIM_NICKNAME, nickname)
+                // 租户标识随 token 下发，后续每个请求都能直接拿到空间 ID。
+                .claim(CLAIM_COUPLE_ID, coupleId)
                 .issuedAt(Date.from(issuedAt))
                 .expiration(Date.from(expiresAt))
                 .signWith(secretKey)

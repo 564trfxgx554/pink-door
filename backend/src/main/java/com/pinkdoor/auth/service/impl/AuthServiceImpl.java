@@ -36,11 +36,18 @@ public class AuthServiceImpl implements AuthService {
             log.warn("Failed login attempt for nickname '{}'", nickname);
             throw new BusinessException(ResultCode.INVALID_CREDENTIALS);
         }
-        String token = jwtTokenProvider.generateToken(user.getId(), user.getNickname());
+        if (user.getCoupleId() == null) {
+            // 没有空间的账号无法确定租户边界，不允许登录。
+            log.warn("Account '{}' is not bound to any couple space", nickname);
+            throw new BusinessException(ResultCode.UNAUTHORIZED.getCode(), "这个账号还没有加入情侣空间。");
+        }
+        String token = jwtTokenProvider.generateToken(
+                user.getId(), user.getNickname(), user.getCoupleId());
         return LoginResponse.builder()
                 .token(token)
                 .tokenType("Bearer")
                 .nickname(user.getNickname())
+                .coupleId(user.getCoupleId())
                 .expiresIn(jwtTokenProvider.getExpireSeconds())
                 .build();
     }

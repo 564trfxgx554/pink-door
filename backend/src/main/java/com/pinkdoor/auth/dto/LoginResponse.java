@@ -21,5 +21,10 @@ public class LoginResponse {
 
     private String nickname;
 
+    /**
+     * 所属情侣空间。前端暂时不用，方便调试和以后切换空间。
+     */
+    private Long coupleId;
+
     private long expiresIn;
 }

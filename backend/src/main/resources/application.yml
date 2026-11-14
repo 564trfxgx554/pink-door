@@ -14,6 +14,8 @@ spring:
       # schema.sql 只使用 CREATE TABLE IF NOT EXISTS，每次启动执行都是安全的。
       mode: always
       schema-locations: classpath:db/schema.sql
+      # 题库数据使用 INSERT ... WHERE NOT EXISTS，重复启动不会重复插入。
+      data-locations: classpath:db/quiz-data.sql
   jackson:
     time-zone: Asia/Shanghai
     default-property-inclusion: non_null
@@ -44,11 +46,16 @@ pink-door:
       # 线上前端的访问域名（帽子云每次部署的子域名是快照，访问域名才是最新版）。
       - https://pinkdoor-10h3c3o2.maozi.io
       - https://qrlvmfwjm-pinkdoor-10h3c3o2.maozi.io
-  preset-account:
-    # 唯一的预置账号。首次启动自动创建，之后每次启动都与这里的配置同步
-    # （改完暗号重启即可生效）。
-    nickname: dyt
-    password: ${PRESET_PASSWORD:scx66}
+  preset-accounts:
+    # 同一个 couple-name 的账号属于同一个情侣空间。
+    # 首次启动自动创建，之后每次启动同步密码和空间，改完重启即可生效。
+    - nickname: dyt
+      password: ${PRESET_PASSWORD:dyt666}
+      couple-name: 我们的小屋
+    # 第二个账号：把 nickname 和 HER_PASSWORD 改成她的昵称和暗号后再启动。
+    - nickname: scx
+      password: ${HER_PASSWORD:scx666}
+      couple-name: 我们的小屋
   ai:
     # Python AI 服务地址，仅内网访问。
     base-url: ${AI_SERVICE_URL:http://127.0.0.1:8000}

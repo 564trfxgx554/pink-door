@@ -28,6 +28,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final String CLAIM_NICKNAME = "nickname";
+    private static final String CLAIM_COUPLE_ID = "couple_id";
 
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
@@ -46,8 +48,16 @@ public class JwtInterceptor implements HandlerInterceptor {
         try {
             Claims claims = jwtTokenProvider.parseToken(header.substring(BEARER_PREFIX.length()));
             Long userId = Long.valueOf(claims.getSubject());
-            String nickname = claims.get("nickname", String.class);
-            UserContext.set(new LoginUser(userId, nickname));
+            String nickname = claims.get(CLAIM_NICKNAME, String.class);
+            // 旧 token 没有 couple_id，直接拒绝，避免无租户上下文的数据访问。
+            Object coupleIdClaim = claims.get(CLAIM_COUPLE_ID);
+            if (coupleIdClaim == null) {
+                log.warn("Rejected token without couple_id, subject={}", userId);
+                writeUnauthorized(response, "Your login is outdated, please log in again.");
+                return false;
+            }
+            Long coupleId = Long.valueOf(coupleIdClaim.toString());
+            UserContext.set(new LoginUser(userId, nickname, coupleId));
             return true;
         } catch (JwtException | IllegalArgumentException ex) {
             log.warn("Rejected token: {}", ex.getMessage());

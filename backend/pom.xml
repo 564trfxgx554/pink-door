@@ -36,6 +36,13 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
+        <!-- WebSocket：默契问答实时同步 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+
         <!-- Bean validation for request DTOs -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
