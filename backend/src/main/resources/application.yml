@@ -7,7 +7,9 @@ spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:pink_door}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:123456}
+    # No default: the password must come from the DB_PASSWORD env var,
+    # otherwise startup fails fast instead of silently using a public value.
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   sql:
     init:
@@ -36,8 +38,9 @@ mybatis-plus:
 
 pink-door:
   jwt:
-    # Base64 编码的 HMAC-SHA256 密钥（解码后至少 32 字节），可用 JWT_SECRET 环境变量覆盖。
-    secret: ${JWT_SECRET:LDjnhcwGFV/ysZa4mUQiIT1LPoD1E2cfXQAatF2b988=}
+    # Base64 编码的 HMAC-SHA256 密钥（解码后至少 32 字节），必须用 JWT_SECRET 环境变量提供，
+    # 代码里不再写默认值，否则启动直接报错，不会偷偷用公开的密钥跑起来。
+    secret: ${JWT_SECRET}
     expire-hours: 24
   cors:
     allowed-origins:
@@ -49,18 +52,20 @@ pink-door:
   preset-accounts:
     # 同一个 couple-name 的账号属于同一个情侣空间。
     # 首次启动自动创建，之后每次启动同步密码和空间，改完重启即可生效。
+    # 暗号必须用 PRESET_PASSWORD / HER_PASSWORD 环境变量提供，代码里不写默认值。
     - nickname: dyt
-      password: ${PRESET_PASSWORD:dyt666}
+      password: ${PRESET_PASSWORD}
       couple-name: 我们的小屋
     # 第二个账号：把 nickname 和 HER_PASSWORD 改成她的昵称和暗号后再启动。
     - nickname: scx
-      password: ${HER_PASSWORD:scx666}
+      password: ${HER_PASSWORD}
       couple-name: 我们的小屋
   ai:
     # Python AI 服务地址，仅内网访问。
     base-url: ${AI_SERVICE_URL:http://127.0.0.1:8000}
-    # Java 调用 Python 的内部令牌，必须与 pink-door-ai/.env 的 AI_INTERNAL_TOKEN 一致。
-    internal-token: ${AI_INTERNAL_TOKEN:change-me}
+    # Java 调用 Python 的内部令牌，必须与 pink-door-ai/.env 的 AI_INTERNAL_TOKEN 一致，
+    # 用 AI_INTERNAL_TOKEN 环境变量提供，代码里不写默认值。
+    internal-token: ${AI_INTERNAL_TOKEN}
     timeout-seconds: 120
 
 logging:
