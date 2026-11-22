@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import Games from '../views/Games.vue'
 import MemoryGame from '../views/MemoryGame.vue'
 import QuizGame from '../views/QuizGame.vue'
+import PuzzleGame from '../views/PuzzleGame.vue'
+import PhotoAlbum from '../views/PhotoAlbum.vue'
 import AiChat from '../views/AiChat.vue'
 
 // Simple auth guard: Home requires a token saved by the login page.
@@ -14,6 +16,8 @@ const routes = [
   { path: '/games', name: 'Games', component: Games, meta: { requiresAuth: true } },
   { path: '/games/memory', name: 'MemoryGame', component: MemoryGame, meta: { requiresAuth: true } },
   { path: '/games/quiz', name: 'QuizGame', component: QuizGame, meta: { requiresAuth: true } },
+  { path: '/games/puzzle', name: 'PuzzleGame', component: PuzzleGame, meta: { requiresAuth: true } },
+  { path: '/photos', name: 'PhotoAlbum', component: PhotoAlbum, meta: { requiresAuth: true } },
   { path: '/ai', name: 'AiChat', component: AiChat, meta: { requiresAuth: true } },
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ]

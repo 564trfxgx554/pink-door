@@ -25,6 +25,11 @@ spring:
     async:
       # AI 流式回答可能持续较久，给异步请求留足时间。
       request-timeout: 120s
+  servlet:
+    multipart:
+      # 相册单张照片上限 5MB，默认 1MB 会直接拒掉上传。
+      max-file-size: 5MB
+      max-request-size: 20MB
 
 mybatis-plus:
   configuration:
@@ -67,6 +72,14 @@ pink-door:
     # 用 AI_INTERNAL_TOKEN 环境变量提供，代码里不写默认值。
     internal-token: ${AI_INTERNAL_TOKEN}
     timeout-seconds: 120
+  oss:
+    # 阿里云 OSS：相册照片存储。endpoint 和 bucket 没有默认值，
+    # AK/SK 必须用环境变量提供，代码和配置文件里不写任何真实值；
+    # 建议用 RAM 子账号，只给相册用的桶读写权限。
+    endpoint: ${OSS_ENDPOINT}
+    bucket: ${OSS_BUCKET}
+    access-key-id: ${OSS_ACCESS_KEY_ID}
+    access-key-secret: ${OSS_ACCESS_KEY_SECRET}
 
 logging:
   level:

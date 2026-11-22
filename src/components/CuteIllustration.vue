@@ -7,13 +7,17 @@
     Using the original image here so the Vue page looks identical.
   -->
   <img
-    src="../assets/hero.webp"
+    :src="hero"
     class="hero-img"
     alt="粉色插画：戴着大蝴蝶结的白色小猫和穿粉色兜帽的小兔子，周围是玫瑰、樱花和爱心"
     width="1600"
     height="1600"
   />
 </template>
+
+<script setup>
+import hero from '../assets/hero.js'
+</script>
 
 <style scoped>
 .hero-img {

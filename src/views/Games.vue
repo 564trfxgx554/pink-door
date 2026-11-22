@@ -27,7 +27,7 @@
         </article>
       </div>
 
-      <p class="note">照片翻牌先做好了，其他 7 个正在排队来哦，敬请期待 🎀</p>
+      <p class="note">照片翻牌、默契问答和照片拼图都能玩啦，其他小游戏正在排队来哦，敬请期待 🎀</p>
     </main>
   </div>
 </template>
@@ -44,7 +44,7 @@ const games = [
   { id: 'wheel', icon: '🎡', name: '约会大转盘', desc: '吃饭、看电影、去公园、宅家做饭……转到哪个就去哪个。', playable: false },
   { id: 'match3', icon: '💖', name: '爱心消消乐', desc: '爱心、玫瑰、樱花三连消，轻松解压，无聊的时候也能玩。', playable: false },
   { id: 'truth', icon: '🎴', name: '真心话大冒险', desc: '抽一张卡，说一件最想谢谢对方的事，或者发一张现在的自拍。', playable: false },
-  { id: 'puzzle', icon: '🧩', name: '拼图', desc: '选一张合照切成小块，拖着拼回去，拼好才能解锁下一张。', playable: false },
+  { id: 'puzzle', icon: '🧩', name: '照片拼图', desc: '选一张合照切成小块，点着拼回去，拼好才算完整。', playable: true, route: '/games/puzzle' },
   { id: 'catch', icon: '🌸', name: '双人接爱心', desc: '爱心和玫瑰往下掉，两个人各控制一边接，合作才能得高分。', playable: false },
   { id: 'flower', icon: '🌷', name: '一起种花', desc: '每天浇一次水，花就长大一点，开花解锁一张照片或一句情话。', playable: false }
 ]

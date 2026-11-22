@@ -26,11 +26,11 @@
           <p>照片记忆翻牌、默契问答、拼图，输了的人要请奶茶。</p>
           <span class="tag">8 个小游戏 · 照片翻牌可以玩啦 →</span>
         </article>
-        <article class="card">
+        <article class="card clickable" @click="router.push('/photos')">
           <div class="card-icon">📸</div>
           <h2>我们的相册</h2>
           <p>你拍的每一张好看的照片，都按旅行、生日、日常好好收着。</p>
-          <span class="tag">即将上线 — Java 后端</span>
+          <span class="tag">翻开我们的照片 →</span>
         </article>
       </div>
 
